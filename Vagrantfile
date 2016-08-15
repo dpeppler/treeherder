@@ -6,6 +6,8 @@ Vagrant.require_version ">= 1.5.0"
 
 def puppet_provisioner(config)
   config.vm.provision "puppet" do |puppet|
+    config.vm.provision "shell", privileged: false, path: "vagrant/setup.sh"
+
     puppet.manifests_path = "puppet/manifests"
     puppet.manifest_file = "vagrant.pp"
 
