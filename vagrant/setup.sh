@@ -23,7 +23,8 @@ sudo -E apt-get -yqq update
 sudo -E apt-get -yqq install --no-install-recommends \
     memcached \
     mysql-server-5.6 \
-    openjdk-7-jre-headless
+    openjdk-7-jre-headless \
+    rabbitmq-server
 
 if [[ "$(dpkg-query --show --showformat='${Version}' elasticsearch 2>&1)" != "$ELASTICSEARCH_VERSION" ]]; then
     echo '-----> Installing Elasticsearch'

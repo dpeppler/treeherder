@@ -20,8 +20,7 @@ class vagrant {
     class {
         python: before => Class["varnish"];
         varnish: before => Class["treeherder"];
-        treeherder: before => Class["rabbitmq"];
-        rabbitmq: before => Class["dev"];
+        treeherder: before => Class["dev"];
         dev:;
     }
 }
