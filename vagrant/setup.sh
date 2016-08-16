@@ -5,6 +5,7 @@
 set -euo pipefail
 
 SRC_DIR="$HOME/treeherder"
+ELASTICSEARCH_VERSION="2.3.5"
 
 # Suppress prompts during apt-get invocations.
 export DEBIAN_FRONTEND=noninteractive
@@ -18,8 +19,19 @@ fi
 
 echo '-----> Installing/updating packages'
 sudo -E apt-get -yqq update
+# openjdk-7-jre-headless is required by Elasticsearch
 sudo -E apt-get -yqq install --no-install-recommends \
-    mysql-server-5.6
+    mysql-server-5.6 \
+    openjdk-7-jre-headless
+
+if [[ "$(dpkg-query --show --showformat='${Version}' elasticsearch 2>&1)" != "$ELASTICSEARCH_VERSION" ]]; then
+    echo '-----> Installing Elasticsearch'
+    ELASTICSEARCH_URL="https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/$ELASTICSEARCH_VERSION/elasticsearch-$ELASTICSEARCH_VERSION.deb"
+    curl -sSf -o /tmp/elasticsearch.deb "$ELASTICSEARCH_URL"
+    sudo dpkg -i /tmp/elasticsearch.deb
+    sudo update-rc.d elasticsearch defaults 95 10
+    sudo service elasticsearch start
+fi
 
 echo '-----> Configuring MySQL'
 if ! cmp -s vagrant/mysql.cnf /etc/mysql/conf.d/treeherder.cnf; then
