@@ -18,8 +18,7 @@ file {"/etc/profile.d/treeherder.sh":
 
 class vagrant {
     class {
-        python: before => Class["varnish"];
-        varnish: before => Class["treeherder"];
+        python: before => Class["treeherder"];
         treeherder: before => Class["dev"];
         dev:;
     }

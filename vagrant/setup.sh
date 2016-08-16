@@ -24,7 +24,8 @@ sudo -E apt-get -yqq install --no-install-recommends \
     memcached \
     mysql-server-5.6 \
     openjdk-7-jre-headless \
-    rabbitmq-server
+    rabbitmq-server \
+    varnish
 
 if [[ "$(dpkg-query --show --showformat='${Version}' elasticsearch 2>&1)" != "$ELASTICSEARCH_VERSION" ]]; then
     echo '-----> Installing Elasticsearch'
@@ -43,3 +44,9 @@ fi
 # The default `root@localhost` grant only allows loopback interface connections.
 mysql -u root -e 'GRANT ALL PRIVILEGES ON *.* to root@"%"'
 mysql -u root -e 'CREATE DATABASE IF NOT EXISTS treeherder'
+
+echo '-----> Configuring Varnish'
+sudo cp vagrant/varnish.vcl /etc/varnish/default.vcl
+sudo sed -i '/^DAEMON_OPTS=\"-a :6081* / s/6081/80/' /etc/default/varnish
+sudo service varnish reload
+
