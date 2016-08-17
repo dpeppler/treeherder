@@ -64,3 +64,8 @@ if [[ ! -f /usr/local/bin/pip ]]; then
     echo '-----> Installing pip'
     curl -sSf https://bootstrap.pypa.io/get-pip.py | sudo -H python -
 fi
+
+if [[ ! -f /usr/local/bin/virtualenv ]]; then
+    echo '-----> Installing virtualenv'
+    sudo -H pip install virtualenv==15.0.1
+fi
