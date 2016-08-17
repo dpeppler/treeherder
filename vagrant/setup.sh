@@ -8,6 +8,7 @@ SRC_DIR="$HOME/treeherder"
 VENV_DIR="$HOME/venv"
 ELASTICSEARCH_VERSION="2.3.5"
 
+export PATH="$VENV_DIR/bin:$PATH"
 # Suppress prompts during apt-get invocations.
 export DEBIAN_FRONTEND=noninteractive
 
@@ -75,3 +76,5 @@ if [[ ! -d "$VENV_DIR" ]]; then
     echo '-----> Creating virtualenv'
     virtualenv "$VENV_DIR"
 fi
+
+./bin/vendor-libmysqlclient.sh "$VENV_DIR"
