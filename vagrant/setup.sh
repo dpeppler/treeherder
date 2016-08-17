@@ -60,3 +60,7 @@ sudo cp vagrant/varnish.vcl /etc/varnish/default.vcl
 sudo sed -i '/^DAEMON_OPTS=\"-a :6081* / s/6081/80/' /etc/default/varnish
 sudo service varnish reload
 
+if [[ ! -f /usr/local/bin/pip ]]; then
+    echo '-----> Installing pip'
+    curl -sSf https://bootstrap.pypa.io/get-pip.py | sudo -H python -
+fi
