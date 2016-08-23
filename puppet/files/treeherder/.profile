@@ -1,9 +1,6 @@
 # Source .bashrc, since the default .profile we're replacing did so.
 . "$HOME/.bashrc"
 
-# Activate the virtualenv.
-. "$HOME/venv/bin/activate"
-
 PS1='\[\e[0;31m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \$ '
 echo "Type 'thelp' to see a list of Treeherder-specific helper aliases"
 cd "$HOME/treeherder"

@@ -28,37 +28,23 @@ class python {
     require => Exec["vendor-python"],
   }
 
-  exec { "install-virtualenv":
-    user => "${APP_USER}",
-    command => "${VENDOR_DIR}/bin/pip install virtualenv==15.0.1",
-    creates => "${VENDOR_DIR}/bin/virtualenv",
-    require => Exec["install-pip"],
-  }
-
-  exec {
-    "create-virtualenv":
-    cwd => "${HOME_DIR}",
-    user => "${APP_USER}",
-    command => "virtualenv ${VENV_DIR}",
-    creates => "${VENV_DIR}",
-    require => Exec["install-virtualenv"],
-  }
-
   exec {"vendor-libmysqlclient":
-    command => "${PROJ_DIR}/bin/vendor-libmysqlclient.sh ${VENV_DIR}",
-    require => Exec["create-virtualenv"],
+    command => "${PROJ_DIR}/bin/vendor-libmysqlclient.sh ${VENDOR_DIR}",
+    require => Exec["install-pip"],
     user => "${APP_USER}",
   }
 
   exec{"pip-install":
-    require => [
-      Exec['create-virtualenv'],
-      Exec['vendor-libmysqlclient'],
-    ],
+    require => Exec["vendor-libmysqlclient"],
     user => "${APP_USER}",
     cwd => "${PROJ_DIR}",
     command => "pip install --disable-pip-version-check --require-hashes -r requirements/common.txt -r requirements/dev.txt",
     timeout => 1800,
   }
 
+  # Clean up the old virtualenv directory. This can be removed after a few weeks.
+  file {"${HOME_DIR}/venv":
+   ensure  => absent,
+   force   => true,
+  }
 }
