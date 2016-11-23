@@ -15,6 +15,7 @@ export DEBIAN_FRONTEND=noninteractive
 export PIP_DISABLE_PIP_VERSION_CHECK='True'
 
 cd "$SRC_DIR"
+. vagrant/env.sh
 
 if [[ ! -f /etc/apt/sources.list.d/fkrull-deadsnakes-python2_7-trusty.list ]]; then
     echo '-----> Adding third party PPA for a newer Python 2.7 than the distro package'
@@ -87,3 +88,8 @@ pip install --require-hashes -r requirements/common.txt -r requirements/dev.txt
 echo '-----> Configuring user profile and environment variables'
 ln -sf "$SRC_DIR/vagrant/.profile" "$HOME/.profile"
 sudo ln -sf "$SRC_DIR/vagrant/env.sh" /etc/profile.d/treeherder.sh
+
+echo '-----> Running Django setup tasks'
+./manage.py migrate --noinput
+./manage.py load_initial_data
+./manage.py init_datasources
