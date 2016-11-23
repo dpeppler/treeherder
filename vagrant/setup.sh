@@ -83,3 +83,7 @@ fi
 
 echo '-----> Running pip install'
 pip install --require-hashes -r requirements/common.txt -r requirements/dev.txt
+
+echo '-----> Configuring user profile and environment variables'
+ln -sf "$SRC_DIR/vagrant/.profile" "$HOME/.profile"
+sudo ln -sf "$SRC_DIR/vagrant/env.sh" /etc/profile.d/treeherder.sh
